@@ -1,23 +1,13 @@
-import connect from "@/app/utils/db"
-import Post from "@/app/models/Post"
-import { NextResponse } from "next/server"
-export const POST = async(request) => {
-    const { username, title, desc, image, content } = await request.json();
-    const newPost = new Post({
-        username,
-        title,
-        desc,
-        image,
-        content,
-    })
+import { NextResponse } from "next/server";
+import Post from "../../models/Post";
+import connect from "../../utils/db"
 
+export const GET = async(request) => {
     try {
         await connect();
-        await newPost.save()
-        return new NextResponse({ status: 200 })
-            // console.log('hi');
+        const posts = await Post.find();
+        return new NextResponse(JSON.stringify(posts), { status: 200 })
     } catch (error) {
-        return new NextResponse('error ' + error, { status: 500 })
+        return new NextResponse(error, { status: 500 })
     }
-
 }
